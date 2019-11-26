@@ -1,0 +1,8 @@
+id
+seller id
+buyer id
+product id
+amount
+
+str replace untuk menghilangkan titik harga
+number format, merubah int ke string + titik harga

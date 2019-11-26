@@ -1,0 +1,2 @@
+primary color = #37797b
+darken = #285658

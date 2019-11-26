@@ -1,0 +1,66 @@
+body {
+	font-family: open sans,tahoma,sans-serif;
+}
+h3 {
+	font-size: 20px !important;
+	margin-bottom: 20px;
+}
+a {
+	color: #49a1a2;
+	/* color: #fff; */
+}
+.bg-auth {
+	background-color: #e0e0e0;
+	background-image: url("../../images/background/bg-dark.png");
+}
+.logo {
+	margin-top: 40px;
+	margin-bottom: 50px;
+	text-align: center;
+}
+.form-container {
+	background: #fff;
+	margin: auto;
+	width: 400px;
+	border: 1px solid #e0e0e0;
+	padding: 20px 40px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 10px 0px #888888;
+}
+form div label {
+	display: block;
+  margin-bottom: 7px;
+  font-size: 12px;
+  line-height: 1.33;
+  color: rgba(0,0,0,.54);
+}
+.form-container input:focus {
+	border: 1px solid #37797b;
+	background: #fcf9f7;
+}
+.btn-submit {
+	height: 40px;
+	color: white;
+	font-size: 13px;
+	padding: 8px 16px;
+	width: 100%;
+	border-radius: 10px;
+	background: #37797b;
+}
+.btn-submit:hover {
+	background: #285658;
+	color: white;
+}
+.my-column {
+  padding: 15px;
+	padding-left: 25px;
+}
+.product-box:hover {
+	/* border: 1px solid #37797b; */
+	box-shadow: 0px 2px 10px 2px #888888;
+	cursor: pointer;
+}
+.tablink {
+	padding: 10px;
+	border: 1px solid red;
+}
