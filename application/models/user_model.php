@@ -2,6 +2,13 @@
 
 class user_model extends CI_Model
 {
+    function search_blog($title){
+        $this->db->like('name', $title , 'both');
+        $this->db->order_by('name', 'ASC');
+        $this->db->limit(10);
+        return $this->db->get('upload_product')->result();
+    }
+
     public function getUser() {
         return $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
     }
@@ -51,10 +58,15 @@ class user_model extends CI_Model
 
     public function editAccount() {
       $name = $this->input->post('name');
+      $bill_numb = $this->input->post('bill_numb');
       $email = $this->input->post('email');
 
       $this->db->set('name', $name);
 			$this->db->where('email', $email);
+			$this->db->update('user');
+
+      $this->db->set('bill_numb', $bill_numb);
+      $this->db->where('email', $email);
 			$this->db->update('user');
     }
 

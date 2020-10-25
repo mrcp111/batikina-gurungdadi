@@ -43,7 +43,7 @@ class buyer_model extends CI_Model
 				'buyer_id' => $cr->buyer_id,
 				'seller_id' => $cr->seller_id,
 				'product_id' => $cr->product_id,
-				'status' => 1
+				'status' => 1,
 			];
 			// $this->db->query("Delete from user_cart where id = $cr->cart_id");
 			$this->db->query("update user_cart set status = 2 where id = $cr->cart_id");

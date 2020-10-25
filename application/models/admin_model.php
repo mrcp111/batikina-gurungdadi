@@ -8,6 +8,7 @@ class admin_model extends CI_Model
 	}
 
 	public function deleteUser($id) {
+		$data_user = $this->db->query("Select * from user where id = '$id'")->row_array();
 		return $this->db->delete('user', array("id" => $id));
 	}
 
