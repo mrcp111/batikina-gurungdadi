@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+// require_once(APPPATH.'third_party/dompdf/dompdf_config.inc.php');
 
 class Admin extends CI_Controller {
 	public function __construct(){
@@ -47,6 +48,18 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/dashboard_header');
 		$this->load->view('admin/sidebar');
 		$this->load->view('admin/data_product', $data);
+		$this->load->view('admin/prefooter');
+		$this->load->view('admin/footer');
+	}
+
+	public function details_product($id) {
+		$data['title'] = "Detail Product";
+		$data['product'] = $this->db->query("Select *, upload_product.name as product_name, user.name as user_name from upload_product inner join user on user.id = upload_product.user_id where upload_product.id = '$id'")->row_array();
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/dashboard_header');
+		$this->load->view('admin/sidebar');
+		$this->load->view('admin/details_product', $data);
 		$this->load->view('admin/prefooter');
 		$this->load->view('admin/footer');
 	}
@@ -120,6 +133,48 @@ class Admin extends CI_Controller {
 		}
 		$this->db->query("update transaction set status = '$new_status' where trx_id = '$td->trx_id'");
 		redirect('admin/data_trx');
+
+	}
+
+	public function data_trx_to_pdf() {
+		$this->load->library('dompdf_gen');
+
+		$data['trx'] = $this->admin_model->getAllTrx();
+		$data['file_name'] = "trx_".date('dmY', time()+60*60*6).date('his', time()+60*60*6).".pdf";
+
+		// $this->load->view('admin/data_trx_view', $data);
+		$this->load->view('admin/data_trx_view', $data);
+
+		$paper_size = "A4";
+		$orientation = "landscape";
+		$html = $this->output->get_output();
+		$this->dompdf->set_paper($paper_size, $orientation);
+
+		$this->dompdf->load_html($html);
+		$this->dompdf->render();
+		$this->dompdf->stream($data['file_name'], array('Attachment' => 0 ));
+
+	}
+
+	public function trx_details_to_pdf($id) {
+		$this->load->library('dompdf_gen');
+		$data['trx'] = $this->admin_model->getTrx($id);
+		$data['trx_details'] = $this->admin_model->getAllTrxDetails($id);
+		$buyer_id = $data['trx']['buyer_id'];
+		$data['buyer'] = $this->db->query("Select * from user where id = '$buyer_id'")->row_array();
+
+		$data['file_name'] = "detailsTrx_".$data['trx']['trx_id'].".pdf";
+
+		$this->load->view('admin/trx_details_view', $data);
+
+		$paper_size = "A4";
+		$orientation = "Potrait";
+		$html = $this->output->get_output();
+		$this->dompdf->set_paper($paper_size, $orientation);
+
+		$this->dompdf->load_html($html);
+		$this->dompdf->render();
+		$this->dompdf->stream($data['file_name'], array('Attachment' => 0 ));
 
 	}
 }

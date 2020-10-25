@@ -11,23 +11,35 @@ class User extends CI_Controller {
 		$this->load->model("seller_model");
 	}
 
-	public function index() {
+	function get_autocomplete(){
+        if (isset($_GET['term'])) {
+            $result = $this->user_model->search_blog($_GET['term']);
+            if (count($result) > 0) {
+            foreach ($result as $row)
+                $arr_result[] = $row->name;
+                echo json_encode($arr_result);
+            }
+        }
+    }
 
+	public function index() {
 		$data['title'] = 'Home';
 		$data['user'] = $this->user_model->getUser();
 		$data['sum_cart'] = $this->user_model->getSumCart();
 		$data['sum_trx'] = $this->user_model->getSumTrx();
 		$data['sum_order'] = $this->seller_model->getSumOrder();
-		$data['product'] = array();
+		// $data['product'] = array();
 		$this->session->set_flashdata('message', '');
 		if ($this->input->get('search', true)) {
-			$word = explode(" ",$this->input->get('search', true));
-			$count_word = str_word_count($this->input->get('search', true));
-			if ($count_word == 0) {
-				$data['product'] = $this->user_model->searchProducts($word[0]);
-			} else {
-				for ($i=0; $i < $count_word; $i++) {
-					$data['product'] += $this->user_model->searchProducts($word[$i]);
+			$search = $this->input->get('search');
+			$data['product'] = $this->db->query("SELECT * from upload_product where name like  '%$search%'")->result();
+			// $word = explode(" ",$this->input->get('search', true));
+			// $count_word = str_word_count($this->input->get('search', true));
+			// if ($count_word == 0) {
+			// 	$data['product'] = $this->user_model->searchProducts($word[0]);
+			// } else {
+			// 	for ($i=0; $i < $count_word; $i++) {
+			// 		$data['product'] += $this->user_model->searchProducts($word[$i]);
 					// var_dump(count($data['product']));
 					// die;
 					// if (count($data['product']) > 1) {
@@ -41,8 +53,8 @@ class User extends CI_Controller {
 					// } else {
 					//
 					// }
-				}
-			}
+			// 	}
+			// }
 			if (!$data['product']) {
 				$this->session->set_flashdata('message', '<div class=""> Data tidak ditemukan </div>');
 			} else {
@@ -140,7 +152,7 @@ class User extends CI_Controller {
 		} else {
 			$this->user_model->doUpload($data);
 			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil mengupload produk</div>');
-			redirect('user/upload_product');
+			redirect('user/product_list');
 
 		}
 	}
@@ -303,7 +315,7 @@ class User extends CI_Controller {
 	}
 
 	public function order_confirmation() {
-		$data['title'] = 'Keranjang';
+		$data['title'] = 'Konfirmasi Pemesanan';
 		$data['user'] = $this->user_model->getUser();
 		$data['sum_cart'] = $this->user_model->getSumCart();
 		$data['sum_trx'] = $this->user_model->getSumTrx();
